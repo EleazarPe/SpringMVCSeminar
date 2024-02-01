@@ -21,6 +21,20 @@ public class CrudRestUsuario {
     public Optional<Usuario> mostrarUser(@PathVariable("id") Long id){
         return usuarioServices.buscarUsuario(id);
     }
+    @PutMapping("/editar/{id}")
+    public void editarUsuario(@PathVariable("id") Long id, @RequestParam("username") String username, @RequestParam("password") String password, @RequestParam("rol") String rol){
+        System.out.println("ID: "+id+" Username: "+username+" Password: "+password+" Rol: "+rol);
+        usuarioServices.buscarUsuario(id).ifPresent(usuario -> {
+            usuario.setUsername(username);
+            usuario.setPassword(password);
+            usuario.setRol(rol);
+            usuarioServices.crearUsuario(usuario);
+        });
+    }
+    @GetMapping("buscar/{id}")
+    public Optional<Usuario> buscarUsuario(@PathVariable("id") Long id){
+        return usuarioServices.buscarUsuario(id);
+    }
 
 
 }

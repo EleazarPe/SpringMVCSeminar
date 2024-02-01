@@ -42,7 +42,9 @@
                     <td style="text-align: center;" th:text="${user.rol}"></td>
 
                     <td style="text-align: center;">
-                        <a th:text="Eliminar" th:href="'/crud/eliminar/'+${user.id}"  class="btn btn-danger btn-sm"/>
+                        <a th:text="Editar" class="btn btn-secondary btn-sm" th:attr="onclick='toggleDiv2(\'' + ${user.id} + '\')'"></a> |
+                        <a th:text="Eliminar" th:href="'/crud/eliminar/'+${user.id}"  class="btn btn-danger btn-sm"></a>
+
                     </td>
                 </tr>
 <!--                <tr class="warning no-result">-->
@@ -79,6 +81,25 @@
         </form>
         <button class="btn btn-primary pull-left" type="button" style="margin-right: 0px;background: #9f000f;border-style: none;margin-top: 10px;"  onclick="toggleDiv()"><i class="fa fa-times"></i>Cancel</button>
         <button class="btn btn-primary pull-right" type="button" style="margin-bottom: 0px;background: rgb(1, 192, 160);border-style: none;border-color: var(--orange);margin-top: 10px;" onclick="enviarData()"><i class="fa fa-arrow-down"></i>Add</button>
+    </div>
+
+</div>
+
+<div id="miDiv2" style=" position: fixed;top: 0;left: 0;width: 100%;height: 100%;background-color: rgba(96, 119, 124, 0.384); z-index: 1; display: none;">
+    <div data-aos="fade-down" data-aos-duration="1000" data-aos-delay="100" data-aos-once="true" class="login-card" style="font-family: Roboto, sans-serif;margin-top: 10%;text-align: justify;height: 350px; ">
+        <p class="profile-name-card"> <i class="fa fa-calendar-plus-o d-inline" style="width:0;height:0;font-size:56px;color:rgb(104,145,162);"></i></p>
+        <form class="form-signin"><span class="reauth-email" style="margin:11px;"> </span>
+            <input type="hidden" id="ocultoid">
+            <input class="form-control" type="text" id="editnombresend" required="" placeholder="Nombre" autofocus="">
+            <input class="form-control" type="password" id="editpassword" required="" placeholder="Contrasena">
+            <span class="reauth-email" style="margin:6px;"> </span>
+            <select id="editfrutas" class="form-control" name="frutas">
+                <option value="usuario">usuario</option>
+                <option value="admin">admin</option>
+            </select>
+        </form>
+        <button class="btn btn-primary pull-left" type="button" style="margin-right: 0px;background: #9f000f;border-style: none;margin-top: 10px;"  onclick="toggleDiv2(-1)"><i class="fa fa-times"></i>Cancel</button>
+        <button class="btn btn-primary pull-right" type="button" style="margin-bottom: 0px;background: rgb(1, 192, 160);border-style: none;border-color: var(--orange);margin-top: 10px;" onclick="editarData()"><i class="fa fa-arrow-down"></i>Edit</button>
     </div>
 
 </div>
@@ -127,6 +148,66 @@
         }
     }
 
+    function editarData(){
+        console.log("Enviando");
+        var oculto = document.getElementById("ocultoid").value;
+        var nombre = document.getElementById("editnombresend").value;
+        var password = document.getElementById("editpassword").value;
+        var rol = document.getElementById("editfrutas").value;
+        var queryParams = $.param({
+            "username": nombre,
+            "password": password,
+            "rol": rol,
+        });
+        url_last = '/crud/api/editar/'+oculto+'?'+queryParams;
+
+        $.ajax({
+            type: "PUT",
+            url: url_last,
+            success: function () {
+                toggleDiv2(-1);
+                location.reload(true);
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
+    }
+    function toggleDiv2(id) {
+        console.log("id: "+id);
+        var miDiv = document.getElementById("miDiv2");
+        if(id.valueOf() >= 0) {
+            $.ajax({
+                type: "GET",
+                url: "/crud/api/buscar/"+id,
+                success: function (data) {
+                    var oculto = document.getElementById("ocultoid");
+                    var nombre = document.getElementById("editnombresend");
+                    var password = document.getElementById("editpassword");
+                    var rol = document.getElementById("editfrutas");
+                    oculto.value = data.id;
+                    nombre.value = data.username;
+                    password.value = data.password;
+                    for (var i = 0; i < rol.options.length; i++) {
+                        var option = rol.options[i];
+                        if (option.value ===  data.rol) {
+                            option.selected = true;
+                            break;
+                        }
+                    }
+                    //location.reload(true);
+                },
+                error: function (error) {
+                    console.error(error);
+                }
+            });
+        }
+        if (miDiv.style.display === "none") {
+            miDiv.style.display = "block";
+        } else {
+            miDiv.style.display = "none";
+        }
+    }
     // function cargarDatos() {
     //     document.body.style.cursor = 'wait';
     //     document.body.classList.add('loading');

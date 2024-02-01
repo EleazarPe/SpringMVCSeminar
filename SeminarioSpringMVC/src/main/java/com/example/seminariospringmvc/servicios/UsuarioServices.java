@@ -30,5 +30,9 @@ public class UsuarioServices {
     public Optional<Usuario> buscarUsuario(Long id){
         return usuarioRepository.findById(id);
     }
+    @Transactional
+    public Optional<Usuario> buscarUsuarioPorId(Long id){
+        return usuarioRepository.findById(id);
+    }
 
 }
