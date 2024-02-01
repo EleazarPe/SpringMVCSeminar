@@ -1,0 +1,34 @@
+version: '3.9'
+networks:
+  my-network:
+
+volumes:
+  h2-usuarios:
+
+services:
+  h2-usuarios:
+    image: oscarfonts/h2
+    restart: always
+    environment:
+      H2_OPTIONS: "-tcp -tcpAllowOthers -tcpPort 9092 -ifNotExists"
+    volumes:
+      - h2-usuarios:/opt/h2-data
+    networks:
+      - my-network
+
+  aplicacion:
+    build: ./SeminarioSpringMVC
+    restart: always
+    ports:
+      - 8080:8080
+    environment:
+      DB_HOST: h2-usuarios
+      DB_PORT: 9092
+      DB_NAME: test
+      DB_USERNAME: "sa"
+      DB_PASSWORD: ""
+      HOST_BD: "h2-usuarios"
+    networks:
+      - my-network
+    depends_on:
+      - h2-usuarios

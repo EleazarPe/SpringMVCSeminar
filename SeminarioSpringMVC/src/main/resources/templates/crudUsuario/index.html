@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Untitled</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oswald:400,700&amp;display=swap">
+    <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="assets/css/styles.min.css">
+    <link rel="stylesheet" href="assets/css/Login-Animate.css">
+    <link rel="stylesheet" href="assets/css/advertencia.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+</head>
+
+<body style="margin-right: 20px;margin-left: 20px;border-color: var(--bs-red);">
+<div class="bounce animated" style="min-height: 20px;max-height: 400px;background: var(--bs-gray-400);margin-top: 50px;margin-right: 20%;margin-left: 20%;min-width: 250px;border-radius: 5px;border-color: var(--bs-blue);border-bottom-color: var(--bs-gray-500);">
+    <h1 style="text-align: center;font-family: Oswald, sans-serif;font-size: 50px;margin-top: 0px;">CRUD Usuarios</h1>
+</div>
+<div class="text-start" style="background: var(--bs-gray-400);transform: perspective(0px) skew(0deg);"><button class="btn btn-primary d-xl-flex align-items-xl-center pull-left" style="text-align: justify;" onclick="toggleDiv()"><i class="fa fa-address-card"></i>&nbsp;Agregar</button>
+    <div class="col-md-12 search-table-col" style="border-color: rgba(37,71,106,0.56);text-align: left;background: var(--bs-white);margin-top: 50px;    "><span class="counter pull-right"></span>
+        <div class="table-responsive table table-hover table-bordered results">
+            <table class="table table-hover table-bordered; margin-bottom: 0px;" id="miTabla">
+                <thead class="bill-header cs">
+                <tr>
+                    <th id="trs-hd-1" class="col-lg-1">ID</th>
+                    <th id="trs-hd-2" class="col-lg-2">Nombre</th>
+                    <th id="trs-hd-3" class="col-lg-3">Contrasena</th>
+                    <th id="trs-hd-4" class="col-lg-3">Rol</th>
+                    <th id="trs-hd-5" class="col-lg-2">Accion</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="user : ${usuariosAll}">
+                    <th scope="row" style="text-align: center;">
+                        <a th:text="${user.id}" th:href="'/crud/api/visualizar/'+${user.id}"/>
+                    </th>
+                    <td style="text-align: center;" th:text="${user.username}"></td>
+                    <td style="text-align: center;" th:text="${user.password}"></td>
+                    <td style="text-align: center;" th:text="${user.rol}"></td>
+
+                    <td style="text-align: center;">
+                        <a th:text="Eliminar" th:href="'/crud/eliminar/'+${user.id}"  class="btn btn-danger btn-sm"/>
+                    </td>
+                </tr>
+<!--                <tr class="warning no-result">-->
+<!--                    <td colspan="12"><i class="fa fa-warning"></i>&nbsp; No Result !!!</td>-->
+<!--                </tr>-->
+                <!-- <tr style="text-align: center;">
+                    <td style="text-align: left;">1014-0933</td>
+                    <td>India</td>
+                    <td>ITT-202</td>
+                    <td>11/07/2023&nbsp; 10:00-12:00</td>
+                    <td style="text-align: center;"><button class="btn btn-success" style="margin-left: 5px;padding: 3px 6px;" type="submit"><i class="fa fa-check" style="font-size: 15px;"></i></button><button class="btn btn-danger" style="margin-left: 5px;padding: 3px 6px;" type="submit"><i class="fa fa-trash" style="font-size: 15px;"></i></button></td>
+                </tr> -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<div id="miDiv" style=" position: fixed;top: 0;left: 0;width: 100%;height: 100%;background-color: rgba(96, 119, 124, 0.384); z-index: 1; display: none;">
+    <div data-aos="fade-down" data-aos-duration="1000" data-aos-delay="100" data-aos-once="true" class="login-card" style="font-family: Roboto, sans-serif;margin-top: 10%;text-align: justify;height: 350px; ">
+        <p class="profile-name-card"> <i class="fa fa-calendar-plus-o d-inline" style="width:0;height:0;font-size:56px;color:rgb(104,145,162);"></i></p>
+        <form class="form-signin"><span class="reauth-email" style="margin:11px;"> </span>
+            <input class="form-control" type="text" id="nombresend" required="" placeholder="Nombre" autofocus="">
+            <input class="form-control" type="password" id="password" required="" placeholder="Contrasena">
+            <span class="reauth-email" style="margin:6px;"> </span>
+            <select id="frutas" class="form-control" name="frutas">
+                <option value="usuario">usuario</option>
+                <option value="admin">admin</option>
+            </select>
+        </form>
+        <button class="btn btn-primary pull-left" type="button" style="margin-right: 0px;background: #9f000f;border-style: none;margin-top: 10px;"  onclick="toggleDiv()"><i class="fa fa-times"></i>Cancel</button>
+        <button class="btn btn-primary pull-right" type="button" style="margin-bottom: 0px;background: rgb(1, 192, 160);border-style: none;border-color: var(--orange);margin-top: 10px;" onclick="enviarData()"><i class="fa fa-arrow-down"></i>Add</button>
+    </div>
+
+</div>
+
+<div class="advertencia" id="advertencia">
+    <h2>¡Advertencia!</h2>
+    <p>Laboratorio lleno</p>
+</div>
+
+<script src="assets/bootstrap/js/bootstrap.min.js"></script>
+<script src="assets/js/script.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+    function enviarData(){
+        console.log("Enviando");
+        var nombre = document.getElementById("nombresend").value;
+        var password = document.getElementById("password").value;
+        var rol = document.getElementById("frutas").value;
+        var queryParams = $.param({
+            "username": nombre,
+            "password": password,
+            "rol": rol,
+        });
+        url_last = '/crud/api/crear'+'?'+queryParams;
+
+        $.ajax({
+            type: "POST",
+            url: url_last,
+            success: function () {
+                toggleDiv();
+                location.reload(true);
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
+    }
+
+    function toggleDiv() {
+        var miDiv = document.getElementById("miDiv");
+        if (miDiv.style.display === "none") {
+            miDiv.style.display = "block";
+        } else {
+            miDiv.style.display = "none";
+        }
+    }
+
+    // function cargarDatos() {
+    //     document.body.style.cursor = 'wait';
+    //     document.body.classList.add('loading');
+    //     console.log("Cargando...");
+    //     $.ajax({
+    //         url: final_url,
+    //         type: 'GET',
+    //         crossDomain: true,
+    //         dataType: 'json',
+    //         success: function (data) {
+    //             console.log(data);
+    //             $('#miTabla tbody').empty();
+    //             $.each(data.data, function(index, item) {
+    //                 $('#miTabla tbody').append('<tr><td style="text-align: center;">' + item.IdEstudiante + '</td><td style="text-align: center;">' + item.nombre + '</td>'+'</td><td style="text-align: center;">' + item.laboratorio.nombre + '</td>'+'</td><td style="text-align: center;">' + item.fecha + '</td>'+'<td style="text-align: center;"><button class="btn btn-danger" style="margin-left: 5px;padding: 3px 6px;" type="submit"><i class="fa fa-trash" style="font-size: 15px;"></i><a>  Delete</a></button></td>'+'</tr>');
+    //             });
+    //         },
+    //         error: function (xhr, status, error) {
+    //             console.error(xhr.responseText);
+    //         }
+    //     });
+    //     document.body.style.cursor = 'default';
+    //     document.body.classList.remove('loading');
+    // }
+    // function cargarDatosOld() {
+    //     document.body.style.cursor = 'wait';
+    //     document.body.classList.add('loading');
+    //     console.log("Cargando...");
+    //     $.ajax({
+    //         url: final_url,
+    //         type: 'PATCH',
+    //         crossDomain: true,
+    //         dataType: 'json',
+    //         success: function (data) {
+    //             console.log(data);
+    //             $('#miTabla tbody').empty();
+    //             $.each(data.data, function(index, item) {
+    //                 $('#miTabla tbody').append('<tr><td style="text-align: center;">' + item.IdEstudiante + '</td><td style="text-align: center;">' + item.nombre + '</td>'+'</td><td style="text-align: center;">' + item.laboratorio.nombre + '</td>'+'</td><td style="text-align: center;">' + item.fecha + '</td>'+'<td style="text-align: center;"><button class="btn btn-danger" style="margin-left: 5px;padding: 3px 6px;" type="submit"><i class="fa fa-trash" style="font-size: 15px;"></i><a>  Delete</a></button></td>'+'</tr>');
+    //             });
+    //         },
+    //         error: function (xhr, status, error) {
+    //             console.error(xhr.responseText);
+    //         }
+    //     });
+    //     document.body.style.cursor = 'default';
+    //     document.body.classList.remove('loading');
+    //
+    //
+    // }
+    // function cargandoMientras(){
+    //     if(actuales === 0){
+    //         console.log("nuevos");
+    //         cargarDatos();
+    //     }else{
+    //         if(ordenar === 0 ){
+    //             console.log("viejos");
+    //             cargarDatosOld();
+    //         }
+    //     }
+    // }
+
+    // $(document).ready(function() {
+    //
+    //     cargarDatos();
+    //
+    //     setInterval(cargandoMientras, 60000);
+    // });
+</script>
+</body>
+
+</html>
